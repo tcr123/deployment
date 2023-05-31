@@ -1,31 +1,55 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
+import pandas as pd
+import pickle
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def home():
+    return 'Testing really work?'
 
-@app.route('/', methods=['GET', 'POST']) # To render Homepage
-def home_page():
-    return render_template('index.html')
+@app.route('/about', methods=['GET'])
+def about():
+    return 'About'
 
-@app.route('/math', methods=['POST'])  # This will be called from UI
-def math_operation():
-    if (request.method=='POST'):
-        operation=request.form['operation']
-        num1=int(request.form['num1'])
-        num2 = int(request.form['num2'])
-        if(operation=='add'):
-            r=num1+num2
-            result= 'Sum of '+str(num1)+' and '+str(num2) +' is '+str(r)
-        if (operation == 'subtract'):
-            r = num1 - num2
-            result = 'Difference of ' + str(num1) + ' and ' + str(num2) + ' is ' + str(r)
-        if (operation == 'multiply'):
-            r = num1 * num2
-            result = 'Product of ' + str(num1) + ' and ' + str(num2) + ' is ' + str(r)
-        if (operation == 'divide'):
-            r = num1 / num2
-            result = 'Quotient when ' + str(num1) + ' is divided by ' + str(num2) + ' is ' + str(r)
-        return render_template('results.html',result=result)
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Load the .pkl file
+    with open('model/content_based_model.pkl', 'rb') as file:
+        model = pickle.load(file)
+
+    food_dataset = pd.read_csv('dataset/data_eng.csv')
+    nutrient_dummies = food_dataset.Nutrient.str.get_dummies()
+    disease_dummies = food_dataset.Disease.str.get_dummies(sep=' ')
+    diet_dummies = food_dataset.Diet.str.get_dummies(sep=' ')
+    feature_df = pd.concat([nutrient_dummies,disease_dummies,diet_dummies],axis=1)
+
+    total_features = feature_df.columns
+    d = dict()
+    for i in total_features:
+        d[i]= 0
+    
+    # Get the data from the POST request
+    data = request.get_json()
+    if data is not None and 'data' in data and isinstance(data['data'], list):
+        features = data['data']
+        for feature in features:
+            d[feature] = 1
+    
+    final_input = list(d.values())
+    # print(final_input)
+
+    distances, indices = model.kneighbors([final_input])
+
+    results = []
+
+    for i in indices.flatten():
+        meal_id = food_dataset.loc[i]['Meal_Id']
+        results.append(meal_id)
+    
+    response = jsonify(results)
+
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

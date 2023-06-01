@@ -14,16 +14,6 @@ def obesity_rules():
     ]
 
 def gestational_diabetes_rules():
-    '''
-    IF a patient is pregnant AND has a fasting plasma glucose level >= 92 mg/dL and < 126 mg/dL, THEN the patient might have gestational diabetes.
-    IF a patient is pregnant AND has a 1-hour plasma glucose level >= 180 mg/dL after a 75-gram glucose load, THEN the patient might have gestational diabetes.
-    IF a patient is pregnant AND has a 2-hour plasma glucose level >= 153 mg/dL after a 75-gram glucose load, THEN the patient might have gestational diabetes.
-    IF a patient is pregnant AND has previously been diagnosed with gestational diabetes, THEN the patient has a higher risk of gestational diabetes.
-    IF a patient is pregnant AND has a pre-pregnancy body mass index (BMI) >= 30, THEN the patient has a higher risk of gestational diabetes.
-    IF a patient is pregnant AND has polycystic ovary syndrome, THEN the patient has a higher risk of gestational diabetes.
-    IF a patient is pregnant AND has a first-degree relative with diabetes, THEN the patient has a higher risk of gestational diabetes.
-    IF a patient is pregnant AND has previously given birth to a baby weighing over 9 pounds, THEN the patient has a higher risk of gestational diabetes.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['1_hour_plasma_glucose_level'] >= 180),
         Rule(0.8, lambda patient: patient.data['gestational_diabetes_history']),
@@ -31,14 +21,6 @@ def gestational_diabetes_rules():
     ]
 
 def hypertension_rules():
-    # translate the following rules into python code
-    '''
-    IF systolic blood pressure is < 140 mm Hg AND diastolic blood pressure is < 90 mm Hg BEFORE 20 weeks gestation, THEN person has Normal blood pressure.
-    IF systolic blood pressure is >= 140 mm Hg OR diastolic blood pressure is >= 90 mm Hg BEFORE 20 weeks gestation, THEN the person has Chronic Hypertension.
-    IF systolic blood pressure is >= 140 mm Hg OR diastolic blood pressure is >= 90 mm Hg AFTER 20 weeks gestation AND no sign of preeclampsia, THEN the person has Gestational Hypertension.
-    IF systolic blood pressure is >= 140 mm Hg OR diastolic blood pressure is >= 90 mm Hg AFTER 20 weeks gestation AND has signs of preeclampsia (proteinuria, thrombocytopenia, renal insufficiency, impaired liver function, pulmonary edema, severe headaches, or visual disturbances), THEN the person has Preeclampsia.
-    IF systolic blood pressure is > 160 mm Hg OR diastolic blood pressure is > 110 mm Hg WITH signs of preeclampsia, THEN the person has Severe Preeclampsia and requires immediate medical attention.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] >= 140 or patient.data['diastolic_blood_pressure'] >= 90),
         # Preemclampia symptoms
@@ -48,38 +30,17 @@ def hypertension_rules():
 
 def anaemia_rules():
     # translate the following rules into python code
-    '''
-    IF a pregnant woman's haemoglobin level is < 11 g/dL THEN she may have anaemia.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['haemoglobin_level'] < 11),
     ]
 
 def rickets_rules():
-    # translate the following rules into python code
-    '''
-    IF a person's blood tests show calcium level < 8.5 mg/dL THEN they may have rickets.
-    IF a person's blood tests show phosphate level < 2.5 mg/dL THEN they may have rickets.
-    IF a person's blood tests show alkaline phosphatase level > 147 IU/L THEN they may have rickets.
-    IF X-rays of the person's bones show changes or deformities associated with rickets THEN they may have rickets.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['calcium_level'] < 8.5),
         Rule(0.8, lambda patient: patient.data['phosphate_level'] < 2.5),
-        # Rule(0.8, lambda patient: patient.data['alkaline_phosphatase_level'] > 147),
     ]
 
 def kidney_diseases_rules():
-    '''
-    IF a person's urine test shows protein level of > 300mg / 24hours  THEN they may have kidney disease.
-    IF a person's blood test shows creatinine level of > 0.85 mg/dL THEN they may have kidney disease.
-    IF a person's pregnancy week is less than 12 weeks AND her blood test shows blood urea nitrogen (BUN) level > 12 THEN she may have kidney disease.
-    IF a person's pregnancy week is mroe than 12 weeks AND less than 24 weeks AND her blood test shows blood urea nitrogen (BUN) level > 13 THEN she may have kidney disease.
-    IF a person's pregnancy week is mroe than 24 weeks AND her blood test shows blood urea nitrogen (BUN) level > 11 THEN she may have kidney disease.
-    IF a person has hypertension THEN they may have kidney disease.
-    IF a person has symptoms like swelling in the ankles, poor appetite, fatigue, sleep problems, muscle cramps at night, puffy eyes in the morning, or frequent urination THEN they may have kidney disease.
-    IF a person has a family history of kidney disease or has diabetes or high blood pressure THEN they are at higher risk for kidney disease.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['urine_protein_level'] > 300),
         Rule(0.8, lambda patient: patient.data['blood_creatinine_level'] > 0.85),
@@ -91,13 +52,6 @@ def kidney_diseases_rules():
     ]
 
 def scurvy_rules():
-    '''
-    IF a person's dietary history shows prolonged inadequate intake of vitamin C (<10 mg/day for about a month) THEN they are at risk of scurvy.
-    IF a person presents with symptoms such as fatigue, malaise, and inflammation of the gums (gingivitis) THEN they may have scurvy.
-    IF a person presents with more severe symptoms such as anaemia, edema (swelling), petechiae (small red or purple spots), bleeding and bruising easily, or joint pain THEN they may have scurvy.
-    IF a person presents with cork-screw hair and/or swollen, bleeding gums, which are classic signs of scurvy, THEN they may have scurvy.
-    IF a person's blood test shows vitamin C level < 0.02 mg/dL THEN they may have scurvy.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['fatigue']),
         Rule(0.8, lambda patient: patient.data['gingivitis']),
@@ -105,18 +59,6 @@ def scurvy_rules():
     ]
 
 def heart_disease_rules():
-    '''
-    IF a person's blood pressure is consistently over 130/80 mm Hg THEN they are at risk for heart disease.
-    IF a person's pregnancy week is less than 12 weeks AND (total cholesterol level > 5.64 mmol/L OR LDL cholesterol level > 3.27 mmol/L OR HDL cholesterol level < 1.23 mmol/L) THEN they are at risk for heart disease.
-    IF a person's pregnancy week more less than 12 weeks AND (total cholesterol level > 7.50 mmol/L OR LDL cholesterol level > 4.83 mmol/L OR HDL cholesterol level < 1.41 mmol/L) THEN they are at risk for heart disease.
-    IF a person has a high body mass index (BMI), particularly over 30, THEN they are at risk for heart disease.
-    IF a person has a family history of heart disease at an early age THEN they are at risk for heart disease.
-    IF a person has been diagnosed with diabetes THEN they are at risk for heart disease.
-    IF a person is a smoker THEN they are at risk for heart disease.
-    IF a person leads a sedentary lifestyle and does not engage in regular physical activity THEN they are at risk for heart disease.
-    IF a person experiences symptoms such as chest pain, chest tightness, shortness of breath, or fatigue THEN they may have heart disease.
-    IF a person's electrocardiogram (ECG/EKG), echocardiogram, or other heart imaging tests show abnormal results THEN they may have heart disease.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['hyptertension']),
         Rule(0.8, lambda patient: patient.data['weeks_pregnant'] < 12 and (patient.data['ldlc_level'] > 3.27 or patient.data['hdlc_level'] < 1.23)),
@@ -128,45 +70,9 @@ def heart_disease_rules():
     ]
 
 def eye_disease_rules():
-    '''
-    IF a person experiences blurred or hazy vision, THEN they might have a refractive error (like myopia, hyperopia, or astigmatism) or cataract.
-    IF a person experiences a gradual loss of central vision, perhaps along with distortions such as straight lines appearing wavy, THEN they might have age-related macular degeneration.
-    IF a person sees floating spots or flashes of light, THEN they might have a retinal detachment or vitreous detachment.
-    IF a person experiences loss of peripheral vision or 'tunnel vision', THEN they might have glaucoma.
-    IF a person experiences double vision, THEN they might have a corneal problem, a nerve problem, or uncorrected refractive error.
-    IF a person has increased sensitivity to light, THEN they might have an inflammation or infection, such as conjunctivitis.
-    IF a person experiences red, itchy, or dry eyes, THEN they might have an allergy or dry eye syndrome.
-    IF a person has difficulty seeing at night or in low light, THEN they might have night blindness, which can be a symptom of Vitamin A deficiency or retinitis pigmentosa.
-    IF a person's eyes look bulgy or they have difficulty moving their eyes, THEN they might have thyroid eye disease.
-    IF a person's comprehensive eye exam shows abnormalities such as increased eye pressure, optic nerve damage, or retinal damage, THEN they might have glaucoma, macular degeneration, or other serious eye conditions.
-    '''
     return [
         Rule(0.8, lambda patient: patient.data['blurred_vision']),
         Rule(0.8, lambda patient: patient.data['floating_spots']),
-    ]
-
-def diet_recommendation_rules():
-    '''
-    IF a person has obesity (CF=0.9) THEN they might benefit from the low_carb_diet (CF=0.7) or Mediterranean_diet (CF=0.7).
-    IF a person has diabetes (CF=0.9) THEN they might benefit from the low_carb_diet (CF=0.8) or high_fiber_diet (CF=0.8).
-    IF a person has hypertension (CF=0.9) THEN they might benefit from the DASH_diet (CF=0.8) or low_sodium_diet (CF=0.8).
-    IF a person has anemia (CF=0.9) THEN they might benefit from a high_protein_diet (CF=0.7), assuming the anemia is due to iron deficiency.
-    IF a person has rickets (CF=0.9) THEN they might benefit from an omni_diet with adequate vitamin D and calcium (CF=0.7).
-    IF a person has kidney diseases (CF=0.9) THEN they might benefit from the low_sodium_diet (CF=0.7) or low_protein_diet (CF=0.7).
-    IF a person has scurvy (CF=0.9) THEN they might benefit from an omni_diet (CF=0.7) that includes plenty of vitamin C-rich foods.
-    IF a person has heart disease (CF=0.9) THEN they might benefit from the DASH_diet (CF=0.8) or a low_fat_diet (CF=0.7).
-    IF a person has eye-disease (CF=0.9) THEN they might benefit from an omni_diet (CF=0.7) rich in omega-3 fatty acids and vitamins for macular health.
-    '''
-    return [
-        Rule(0.9, lambda patient: patient.data['obesity']),
-        Rule(0.9, lambda patient: patient.data['diabetes']),
-        Rule(0.9, lambda patient: patient.data['hypertension']),
-        Rule(0.9, lambda patient: patient.data['anemia']),
-        Rule(0.9, lambda patient: patient.data['rickets']),
-        Rule(0.9, lambda patient: patient.data['kidney_diseases']),
-        Rule(0.9, lambda patient: patient.data['scurvy']),
-        Rule(0.9, lambda patient: patient.data['heart_disease']),
-        Rule(0.9, lambda patient: patient.data['eye_disease']),
     ]
     
 def compute_CF(user_CF, rule, patient):
@@ -181,17 +87,120 @@ def combine_CFs(cfs):
         cf_combined = cf_combined + cf * (1 - cf_combined)
     return cf_combined
 
-# patient_data = {
-#     'bmi': 31,
-# }
 
-# patient = Patient(patient_data)
-# ob_rules = obesity_rules()
+def evaluate_all_rules(patient):
+    check_sequence = ['gestational_diabetes', 'hypertension', 'obesity', 'anaemia', 'rickets', 'kidney_diseases', 'scurvy', 'heart_disease', 'eye_disease']
+    diseases = {
+        'obesity': obesity_rules(),
+        'gestational_diabetes': gestational_diabetes_rules(),
+        'hypertension': hypertension_rules(),
+        'anaemia': anaemia_rules(),
+        'rickets': rickets_rules(),
+        'kidney_diseases': kidney_diseases_rules(),
+        'scurvy': scurvy_rules(),
+        'heart_disease': heart_disease_rules(),
+        'eye_disease': eye_disease_rules()
+    }
 
-# user_CF = 0.7
+    diagnosis_results = {}
 
-# cfs = [compute_CF(user_CF, rule, patient) for rule in ob_rules]
-# cf_combined = combine_CFs(cfs)
-# confidence_percentage = cf_combined * 100
+    user_CF = 0.7
+    threshold = 0.95
 
-# print(f'Confidence percentage: {confidence_percentage:.2f}%')
+    for disease in check_sequence:
+        rules = diseases[disease]
+        cfs = [compute_CF(user_CF, rule, patient) for rule in rules]
+        cf_combined = combine_CFs(cfs)
+        confidence_percentage = cf_combined * 100
+
+        if confidence_percentage / 100 >= threshold:
+            patient.set(disease, True)
+            diagnosis_results[disease] = True
+        else:
+            patient.set(disease, False)
+            diagnosis_results[disease] = False
+
+    return diagnosis_results
+
+# disease list = ['obesity', 'gestational_diabetes', 'hypertension', 'anaemia', 'rickets', 'kidney_diseases', 'scurvy', 'heart_disease', 'eye_disease']
+
+def diet_recommendation_rules(diagnosis_results):
+    diets = {
+        'alkaline_diet': ['kidney_diseases'],
+        'low_fat_diet': ['obesity', 'heart_disease'],
+        'ketogenic_diet': ['obesity'],
+        'low_sodium_diet': ['hypertension'],
+        'high_fiber_diet': ['gestational_diabetes', 'obesity'],
+        'high_protein_diet': ['anaemia'],
+        'dash_diet': ['hypertension', 'heart_disease'],
+        'low_carb_diet': ['gestational_diabetes', 'obesity'],
+        'vegan_diet': ['obesity', 'hypertension'],
+        'hormone_diet': ['rickets'],
+        'type_a_diet': ['gestational_diabetes', 'heart_diasease'],
+        'paleo_diet': ['gestational_diabetes'],
+        'Mediterranean_diet': ['heart_disease', 'hypertension'],
+        'gluten_free_diet': ['diabetes'],
+        'omni_diet': ['gestational_diabetes', 'obesity', 'hypertension', 'heart_disease'],
+        'type_o_diet': ['heart_disease']
+    }
+
+    diet_counts = {}
+
+    for diet, conditions in diets.items():
+        for condition in conditions:
+            if diagnosis_results.get(condition):
+                diet_counts[diet] = diet_counts.get(diet, 0) + 1
+
+    if diet_counts:
+        # Return the diet with the highest count
+        recommended_diet = max(diet_counts, key=diet_counts.get)
+    else:
+        recommended_diet = None  # No suitable diet found
+
+    return recommended_diet
+
+def recommend_diet(patient):
+    diagnosis_results = evaluate_all_rules(patient)
+    recommended_diet = diet_recommendation_rules(diagnosis_results)
+    return recommended_diet
+
+patient_data = {
+    'bmi': 31, # BMI of 31 which indicates obesity
+    '1_hour_plasma_glucose_level': 190, # 1 hour plasma glucose level of 190, indicating gestational diabetes
+    'gestational_diabetes_history': True, # Patient has a history of gestational diabetes
+    'systolic_blood_pressure': 145, # High systolic blood pressure, indicating hypertension
+    'diastolic_blood_pressure': 95, # High diastolic blood pressure, also indicating hypertension
+    'urine_protein_level': 350, # High level of protein in urine, indicating pre-eclampsia or kidney disease
+    'blurred_vision': True, # Symptom can be related to hypertension or eye disease
+    'haemoglobin_level': 10.5, # Low haemoglobin level, indicating anaemia
+    'calcium_level': 8.2, # Low calcium level, indicating rickets
+    'phosphate_level': 2.4, # Low phosphate level, also indicating rickets
+    'blood_creatinine_level': 0.9, # High blood creatinine level, indicating kidney disease
+    'weeks_pregnant': 14, # Patient is in the second trimester of pregnancy
+    'blood_urea_nitrogen_level': 14, # High blood urea nitrogen level, indicating kidney disease
+    'hypertension': True, # Patient has hypertension
+    'fatigue': True, # Patient has fatigue, which can be a symptom of multiple diseases
+    'gingivitis': True, # Patient has gingivitis, which can be a symptom of scurvy
+    'vitamin_c_level': 0.01, # Low vitamin C level, indicating scurvy
+    'hyptertension': True, # Typo here, should be 'hypertension'
+    'ldlc_level': 3.5, # LDL cholesterol level is within normal range
+    'hdlc_level': 1.2, # HDL cholesterol level is within normal range
+    'family_history_heart_disease': True, # Family history of heart disease
+    'chest_pain': True, # Chest pain can be a symptom of heart disease
+    'floating_spots': True, # Floating spots can be a symptom of eye disease
+
+    # add fields for the diseases we want to check for
+    'obesity': False,
+    'gestational_diabetes': False,
+    'hypertension': False,   
+    'anaemia': False,
+    'rickets': False,
+    'kidney_diseases': False,
+    'scurvy': False,
+    'heart_disease': False,
+    'eye_disease': False
+}
+
+patient = Patient(patient_data)
+recommended_diet = recommend_diet(patient)
+print(recommended_diet)

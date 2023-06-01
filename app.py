@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import pickle
+from kbase.patient import Patient
+import kbase.rules as rules
 
 app = Flask(__name__)
 
@@ -49,6 +51,22 @@ def predict():
     
     response = jsonify(results)
 
+    return response
+
+@app.route('/diet', methods=['POST'])
+def diet():
+    # Get the data from the POST request
+    data = request.get_json()
+    if data is not None and 'data' in data and isinstance(data['data'], dict):
+        patient_data = data['data']
+        patient = Patient(patient_data)
+        recommended_diet = rules.recommend_diet(patient)
+        response = jsonify(recommended_diet)
+    else:
+        response = jsonify('Invalid request')
+
+    print(response)
+    
     return response
 
 if __name__ == '__main__':

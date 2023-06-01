@@ -25,14 +25,9 @@ def gestational_diabetes_rules():
     IF a patient is pregnant AND has previously given birth to a baby weighing over 9 pounds, THEN the patient has a higher risk of gestational diabetes.
     '''
     return [
-        Rule(0.8, lambda patient: patient.data['fasting_plasma_glucose_level'] >= 126),
         Rule(0.8, lambda patient: patient.data['1_hour_plasma_glucose_level'] >= 180),
-        Rule(0.8, lambda patient: patient.data['2_hour_plasma_glucose_level'] >= 153),
         Rule(0.8, lambda patient: patient.data['gestational_diabetes_history']),
         Rule(0.8, lambda patient: patient.data['bmi'] >= 30),
-        Rule(0.8, lambda patient: patient.data['polycystic_ovary_syndrome']),
-        Rule(0.8, lambda patient: patient.data['first_degree_relative_with_diabetes']),
-        Rule(0.8, lambda patient: patient.data['previous_baby_weighed_over_9_pounds']),
     ]
 
 def hypertension_rules():
@@ -45,11 +40,10 @@ def hypertension_rules():
     IF systolic blood pressure is > 160 mm Hg OR diastolic blood pressure is > 110 mm Hg WITH signs of preeclampsia, THEN the person has Severe Preeclampsia and requires immediate medical attention.
     '''
     return [
-        Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] < 140 and patient.data['diastolic_blood_pressure'] < 90 and patient.data['weeks_pregnant'] < 20),
-        Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] >= 140 or patient.data['diastolic_blood_pressure'] >= 90 and patient.data['weeks_pregnant'] < 20),
-        Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] >= 140 or patient.data['diastolic_blood_pressure'] >= 90 and patient.data['weeks_pregnant'] >= 20 and not patient.data['preeclampsia']),
-        Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] >= 140 or patient.data['diastolic_blood_pressure'] >= 90 and patient.data['weeks_pregnant'] >= 20 and patient.data['preeclampsia']),
-        Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] > 160 or patient.data['diastolic_blood_pressure'] > 110 and patient.data['preeclampsia_signs']),
+        Rule(0.8, lambda patient: patient.data['systolic_blood_pressure'] >= 140 or patient.data['diastolic_blood_pressure'] >= 90),
+        # Preemclampia symptoms
+        Rule(0.8, lambda patient: patient.data['urine_protein_level'] > 300),
+        Rule(0.8, lambda patient: patient.data['blurred_vision']),
     ]
 
 def anaemia_rules():
@@ -72,8 +66,7 @@ def rickets_rules():
     return [
         Rule(0.8, lambda patient: patient.data['calcium_level'] < 8.5),
         Rule(0.8, lambda patient: patient.data['phosphate_level'] < 2.5),
-        Rule(0.8, lambda patient: patient.data['alkaline_phosphatase_level'] > 147),
-        Rule(0.8, lambda patient: patient.data['rickets_associated_deformities']),
+        # Rule(0.8, lambda patient: patient.data['alkaline_phosphatase_level'] > 147),
     ]
 
 def kidney_diseases_rules():
@@ -83,7 +76,6 @@ def kidney_diseases_rules():
     IF a person's pregnancy week is less than 12 weeks AND her blood test shows blood urea nitrogen (BUN) level > 12 THEN she may have kidney disease.
     IF a person's pregnancy week is mroe than 12 weeks AND less than 24 weeks AND her blood test shows blood urea nitrogen (BUN) level > 13 THEN she may have kidney disease.
     IF a person's pregnancy week is mroe than 24 weeks AND her blood test shows blood urea nitrogen (BUN) level > 11 THEN she may have kidney disease.
-    IF a person's Glomerular Filtration Rate (GFR) is < 60 for 3 months or more THEN they may have chronic kidney disease.
     IF a person has hypertension THEN they may have kidney disease.
     IF a person has symptoms like swelling in the ankles, poor appetite, fatigue, sleep problems, muscle cramps at night, puffy eyes in the morning, or frequent urination THEN they may have kidney disease.
     IF a person has a family history of kidney disease or has diabetes or high blood pressure THEN they are at higher risk for kidney disease.
@@ -94,10 +86,8 @@ def kidney_diseases_rules():
         Rule(0.8, lambda patient: patient.data['weeks_pregnant'] < 12 and patient.data['blood_urea_nitrogen_level'] > 12),
         Rule(0.8, lambda patient: patient.data['weeks_pregnant'] > 12 and patient.data['weeks_pregnant'] < 24 and patient.data['blood_urea_nitrogen_level'] > 13),
         Rule(0.8, lambda patient: patient.data['weeks_pregnant'] > 24 and patient.data['blood_urea_nitrogen_level'] > 11),
-        Rule(0.8, lambda patient: patient.data['glomerular_filtration_rate'] < 60),
         Rule(0.8, lambda patient: patient.data['hypertension']),
-        Rule(0.8, lambda patient: patient.data['swelling_in_ankles'] or patient.data['poor_appetite'] or patient.data['fatigue'] or patient.data['sleep_problems'] or patient.data['muscle_cramps_at_night'] or patient.data['puffy_eyes_in_morning'] or patient.data['frequent_urination']),
-        Rule(0.8, lambda patient: patient.data['family_history_kidney_disease']),
+        Rule(0.8, lambda patient: patient.data['fatigue']),
     ]
 
 def scurvy_rules():
@@ -109,9 +99,8 @@ def scurvy_rules():
     IF a person's blood test shows vitamin C level < 0.02 mg/dL THEN they may have scurvy.
     '''
     return [
-        Rule(0.8, lambda patient: patient.data['daily_vitamin_c_intake'] < 10),
         Rule(0.8, lambda patient: patient.data['fatigue']),
-        Rule(0.8, lambda patient: patient.data['cork_screw_hair'] or patient.data['gingivitis']),
+        Rule(0.8, lambda patient: patient.data['gingivitis']),
         Rule(0.8, lambda patient: patient.data['vitamin_c_level'] < 0.02),
     ]
 
@@ -130,13 +119,12 @@ def heart_disease_rules():
     '''
     return [
         Rule(0.8, lambda patient: patient.data['hyptertension']),
-        Rule(0.8, lambda patient: patient.data['weeks_pregnant'] < 12 and (patient.data['tc_level'] > 5.64 or patient.data['ldlc_level'] > 3.27 or patient.data['hdlc_level'] < 1.23)),
-        Rule(0.8, lambda patient: patient.data['weeks_pregnant'] > 12 and (patient.data['tc_level'] > 7.50 or patient.data['ldlc_level'] > 4.83 or patient.data['hdlc_level'] < 1.41)),
+        Rule(0.8, lambda patient: patient.data['weeks_pregnant'] < 12 and (patient.data['ldlc_level'] > 3.27 or patient.data['hdlc_level'] < 1.23)),
+        Rule(0.8, lambda patient: patient.data['weeks_pregnant'] > 12 and (patient.data['ldlc_level'] > 4.83 or patient.data['hdlc_level'] < 1.41)),
         Rule(0.8, lambda patient: patient.data['bmi'] > 30),
         Rule(0.8, lambda patient: patient.data['family_history_heart_disease']),
-        Rule(0.8, lambda patient: patient.data['diabetes']),
-        Rule(0.8, lambda patient: patient.data['smoker']),
-        Rule(0.8, lambda patient: patient.data['chest_pain'] or patient.data['shortness_of_breath'] or patient.data['fatigue']),
+        Rule(0.8, lambda patient: patient.data['gestational_diabetes']),
+        Rule(0.8, lambda patient: patient.data['chest_pain'] or patient.data['fatigue']),
     ]
 
 def eye_disease_rules():
@@ -154,11 +142,7 @@ def eye_disease_rules():
     '''
     return [
         Rule(0.8, lambda patient: patient.data['blurred_vision']),
-        Rule(0.8, lambda patient: patient.data['floating_spots'] or patient.data['flashes_of_light']),
-        Rule(0.8, lambda patient: patient.data['increased_sensitivity_to_light']),
-        Rule(0.8, lambda patient: patient.data['red_eyes']),
-        Rule(0.8, lambda patient: patient.data['difficulty_seeing_in_low_light']),
-        Rule(0.8, lambda patient: patient.data['bulgy_eyes']),
+        Rule(0.8, lambda patient: patient.data['floating_spots']),
     ]
 
 def diet_recommendation_rules():
@@ -185,17 +169,17 @@ def diet_recommendation_rules():
         Rule(0.9, lambda patient: patient.data['eye_disease']),
     ]
     
-# def compute_CF(user_CF, rule, patient):
-#     if rule.apply_rule(patient):
-#         return user_CF * rule.expert_cf
-#     else:
-#         return 0
+def compute_CF(user_CF, rule, patient):
+    if rule.apply_rule(patient):
+        return user_CF * rule.expert_cf
+    else:
+        return 0
         
-# def combine_CFs(cfs):
-#     cf_combined = cfs[0]
-#     for cf in cfs[1:]:
-#         cf_combined = cf_combined + cf * (1 - cf_combined)
-#     return cf_combined
+def combine_CFs(cfs):
+    cf_combined = cfs[0]
+    for cf in cfs[1:]:
+        cf_combined = cf_combined + cf * (1 - cf_combined)
+    return cf_combined
 
 # patient_data = {
 #     'bmi': 31,

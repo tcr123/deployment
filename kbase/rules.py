@@ -1,8 +1,5 @@
 # Define the rules inside a rule-based expert system
 # The system will determine the confidence factor of each rule for each disease from the list [obesity, diabetes, hypertension, anaemia, rickets, kidney dieases, scurvy, heart disease, eye cancer]
-
-from patient import Patient
-
 class Rule:
     def __init__(self, expert_cf, apply_rule):
         self.expert_cf = expert_cf
@@ -178,7 +175,6 @@ patient_data = {
     'blood_creatinine_level': 0.9, # High blood creatinine level, indicating kidney disease
     'weeks_pregnant': 14, # Patient is in the second trimester of pregnancy
     'blood_urea_nitrogen_level': 14, # High blood urea nitrogen level, indicating kidney disease
-    'hypertension': True, # Patient has hypertension
     'fatigue': True, # Patient has fatigue, which can be a symptom of multiple diseases
     'gingivitis': True, # Patient has gingivitis, which can be a symptom of scurvy
     'vitamin_c_level': 0.01, # Low vitamin C level, indicating scurvy
@@ -200,7 +196,3 @@ patient_data = {
     'heart_disease': False,
     'eye_disease': False
 }
-
-patient = Patient(patient_data)
-recommended_diet = recommend_diet(patient)
-print(recommended_diet)

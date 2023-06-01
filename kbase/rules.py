@@ -121,45 +121,71 @@ def evaluate_all_rules(patient):
 
 # disease list = ['obesity', 'gestational_diabetes', 'hypertension', 'anaemia', 'rickets', 'kidney_diseases', 'scurvy', 'heart_disease', 'eye_disease']
 
-def diet_recommendation_rules(diagnosis_results):
-    diets = {
-        'alkaline_diet': ['kidney_diseases'],
-        'low_fat_diet': ['obesity', 'heart_disease'],
-        'ketogenic_diet': ['obesity'],
-        'low_sodium_diet': ['hypertension'],
-        'high_fiber_diet': ['gestational_diabetes', 'obesity'],
-        'high_protein_diet': ['anaemia'],
-        'dash_diet': ['hypertension', 'heart_disease'],
-        'low_carb_diet': ['gestational_diabetes', 'obesity'],
-        'vegan_diet': ['obesity', 'hypertension'],
-        'hormone_diet': ['rickets'],
-        'type_a_diet': ['gestational_diabetes', 'heart_diasease'],
-        'paleo_diet': ['gestational_diabetes'],
-        'Mediterranean_diet': ['heart_disease', 'hypertension'],
-        'gluten_free_diet': ['diabetes'],
-        'omni_diet': ['gestational_diabetes', 'obesity', 'hypertension', 'heart_disease'],
-        'type_o_diet': ['heart_disease']
+# def diet_recommendation_rules(diagnosis_results):
+#     diets = {
+#         'alkaline_diet': ['kidney_diseases'],
+#         'low_fat_diet': ['obesity', 'heart_disease'],
+#         'ketogenic_diet': ['obesity'],
+#         'low_sodium_diet': ['hypertension'],
+#         'high_fiber_diet': ['gestational_diabetes', 'obesity'],
+#         'high_protein_diet': ['anaemia'],
+#         'dash_diet': ['hypertension', 'heart_disease'],
+#         'low_carb_diet': ['gestational_diabetes', 'obesity'],
+#         'vegan_diet': ['obesity', 'hypertension'],
+#         'hormone_diet': ['rickets'],
+#         'type_a_diet': ['gestational_diabetes', 'heart_diasease'],
+#         'paleo_diet': ['gestational_diabetes'],
+#         'Mediterranean_diet': ['heart_disease', 'hypertension'],
+#         'gluten_free_diet': ['diabetes'],
+#         'omni_diet': ['gestational_diabetes', 'obesity', 'hypertension', 'heart_disease'],
+#         'type_o_diet': ['heart_disease']
+#     }
+
+#     diet_counts = {}
+
+#     for diet, conditions in diets.items():
+#         for condition in conditions:
+#             if diagnosis_results.get(condition):
+#                 diet_counts[diet] = diet_counts.get(diet, 0) + 1
+
+#     if diet_counts:
+#         # Return the diet with the highest count
+#         recommended_diet = max(diet_counts, key=diet_counts.get)
+#     else:
+#         recommended_diet = None  # No suitable diet found
+
+#     return recommended_diet
+
+def disease_to_keywords(diagnosis_results):
+    disease_to_keyword = {
+        'obesity': ['carbohydrates', 'fiber', 'low_carb_diet', 'low_fat_diet', 'obesity', 'high_fiber_diet', 'ketogenic_diet', 'gluten_free_diet', 
+                    'vegan_diet', 'omni_diet'],
+        'gestational_diabetes': ['carbohydrates', 'protien', 'fiber', 'low_carb_diet', 'diabeties', 'pregnancy', 'magnesium', 'hormone_diet', 
+                                 'type_a_diet', 'omni_diet'],
+        'hypertension': ['sodium', 'low_sodium_diet', 'dash_diet', 'hypertension', 'chloride', 'Mediterranean_diet', 'hormone_diet', 'omni_diet'],
+        'anemia': ['iron', 'vitamin_c', 'vitamin_e', 'anemia'],
+        'rickets': ['calcium', 'vitamin_d', 'rickets', 'phosphorus'],
+        'kidney_diseases': ['protein', 'sodium', 'potassium', 'kidney_disease', 'alkaline_diet', 'chloride'],
+        'scurvy': ['vitamin_c', 'scurvy'],
+        'heart_disease': ['sodium', 'protien', 'fiber', 'low_sodium_diet', 'low_fat_diet', 'dash_diet', 'heart_disease', 'chloride',
+                           'magnesium', 'selenium', 'Mediterranean_diet', 'hormone_diet', 'type_o_diet', 'type_a_diet', 'paleo_diet', 'omni_diet'],
+        'eye_disease': ['vitamin_a', 'eye_disease']
     }
+  
+    keywords = []
 
-    diet_counts = {}
+    for disease, present in diagnosis_results.items():
+        if present:
+            keywords += disease_to_keyword[disease]
 
-    for diet, conditions in diets.items():
-        for condition in conditions:
-            if diagnosis_results.get(condition):
-                diet_counts[diet] = diet_counts.get(diet, 0) + 1
+    return keywords
 
-    if diet_counts:
-        # Return the diet with the highest count
-        recommended_diet = max(diet_counts, key=diet_counts.get)
-    else:
-        recommended_diet = None  # No suitable diet found
-
-    return recommended_diet
-
-def recommend_diet(patient):
+def get_features(patient):
     diagnosis_results = evaluate_all_rules(patient)
-    recommended_diet = diet_recommendation_rules(diagnosis_results)
-    return recommended_diet
+    features = disease_to_keywords(diagnosis_results)
+    return features
+    # recommended_diet = diet_recommendation_rules(diagnosis_results)
+    # return recommended_diet
 
 patient_data = {
     'bmi': 31, # BMI of 31 which indicates obesity
@@ -196,3 +222,9 @@ patient_data = {
     'heart_disease': False,
     'eye_disease': False
 }
+
+# keywords = ['calcium', 'carbohydrates', 'chloride', 'fiber', 'iodine', 'iron', 'magnesium', 'manganese', 'phosphorus', 'potassium', 
+    #             'protien', 'selenium', 'sodium', 'vitamin_a', 'vitamin_c', 'vitamin_d', 'vitamin_e', 'anemia', 'cancer', 'diabeties', 'eye_disease', 
+    #             'goitre', 'heart_disease', 'hypertension', 'kidney_disease', 'obesity', 'pregnancy', 'rickets', 'scurvy', 'Mediterranean_diet', 
+    #             'alkaline_diet', 'dash_diet', 'gluten_free_diet', 'high_fiber_diet', 'high_protien_diet', 'hormone_diet', 'ketogenic_diet', 
+    #             'low_carb_diet', 'low_fat_diet', 'low_sodium_diet', 'omni_diet', 'paleo_diet', 'type_a_diet', 'type_o_diet', 'vegan_diet']

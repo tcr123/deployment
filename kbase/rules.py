@@ -204,7 +204,6 @@ patient_data = {
     'fatigue': True, # Patient has fatigue, which can be a symptom of multiple diseases
     'gingivitis': True, # Patient has gingivitis, which can be a symptom of scurvy
     'vitamin_c_level': 0.01, # Low vitamin C level, indicating scurvy
-    'hyptertension': True, # Typo here, should be 'hypertension'
     'ldlc_level': 3.5, # LDL cholesterol level is within normal range
     'hdlc_level': 1.2, # HDL cholesterol level is within normal range
     'family_history_heart_disease': True, # Family history of heart disease

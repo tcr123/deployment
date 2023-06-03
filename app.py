@@ -94,6 +94,8 @@ def diet():
             meal_id = food_dataset.loc[i]['Meal_Id']
             results.append(meal_id)
 
+        results = list(set(results))
+
         response = jsonify(results)
     else:
         response = jsonify('Invalid request')

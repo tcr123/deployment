@@ -101,7 +101,7 @@ def evaluate_all_rules(patient):
 
     diagnosis_results = {}
 
-    threshold = 0.95
+    threshold = 0.9
 
     for disease in check_sequence:
         rules = diseases[disease]

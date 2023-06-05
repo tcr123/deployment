@@ -74,7 +74,7 @@ def eye_disease_rules():
     
 def compute_CF(rule, patient):
     if rule.apply_rule(patient):
-        return rule.user_CF * rule.expert_cf
+        return rule.user_cf * rule.expert_cf
     else:
         return 0
         

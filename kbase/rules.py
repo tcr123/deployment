@@ -1,5 +1,10 @@
 # Define the rules inside a rule-based expert system
 # The system will determine the confidence factor of each rule for each disease from the list [obesity, diabetes, hypertension, anaemia, rickets, kidney dieases, scurvy, heart disease, eye cancer]
+
+import pandas as pd
+
+food_dataset = pd.read_csv('dataset/data_eng.csv')
+
 class Rule:
     def __init__(self, expert_cf, apply_rule):
         self.expert_cf = expert_cf
@@ -119,42 +124,6 @@ def evaluate_all_rules(patient):
 
     return diagnosis_results
 
-# disease list = ['obesity', 'gestational_diabetes', 'hypertension', 'anaemia', 'rickets', 'kidney_diseases', 'scurvy', 'heart_disease', 'eye_disease']
-
-# def diet_recommendation_rules(diagnosis_results):
-#     diets = {
-#         'alkaline_diet': ['kidney_diseases'],
-#         'low_fat_diet': ['obesity', 'heart_disease'],
-#         'ketogenic_diet': ['obesity'],
-#         'low_sodium_diet': ['hypertension'],
-#         'high_fiber_diet': ['gestational_diabetes', 'obesity'],
-#         'high_protein_diet': ['anaemia'],
-#         'dash_diet': ['hypertension', 'heart_disease'],
-#         'low_carb_diet': ['gestational_diabetes', 'obesity'],
-#         'vegan_diet': ['obesity', 'hypertension'],
-#         'hormone_diet': ['rickets'],
-#         'type_a_diet': ['gestational_diabetes', 'heart_diasease'],
-#         'paleo_diet': ['gestational_diabetes'],
-#         'Mediterranean_diet': ['heart_disease', 'hypertension'],
-#         'gluten_free_diet': ['diabetes'],
-#         'omni_diet': ['gestational_diabetes', 'obesity', 'hypertension', 'heart_disease'],
-#         'type_o_diet': ['heart_disease']
-#     }
-
-#     diet_counts = {}
-
-#     for diet, conditions in diets.items():
-#         for condition in conditions:
-#             if diagnosis_results.get(condition):
-#                 diet_counts[diet] = diet_counts.get(diet, 0) + 1
-
-#     if diet_counts:
-#         # Return the diet with the highest count
-#         recommended_diet = max(diet_counts, key=diet_counts.get)
-#     else:
-#         recommended_diet = None  # No suitable diet found
-
-#     return recommended_diet
 
 def disease_to_keywords(diagnosis_results):
     disease_to_keyword = {
@@ -187,40 +156,58 @@ def get_features(patient):
     # recommended_diet = diet_recommendation_rules(diagnosis_results)
     # return recommended_diet
 
-patient_data = {
-    'bmi': 31, # BMI of 31 which indicates obesity
-    '1_hour_plasma_glucose_level': 190, # 1 hour plasma glucose level of 190, indicating gestational diabetes
-    'gestational_diabetes_history': True, # Patient has a history of gestational diabetes
-    'systolic_blood_pressure': 145, # High systolic blood pressure, indicating hypertension
-    'diastolic_blood_pressure': 95, # High diastolic blood pressure, also indicating hypertension
-    'urine_protein_level': 350, # High level of protein in urine, indicating pre-eclampsia or kidney disease
-    'blurred_vision': True, # Symptom can be related to hypertension or eye disease
-    'haemoglobin_level': 10.5, # Low haemoglobin level, indicating anaemia
-    'calcium_level': 8.2, # Low calcium level, indicating rickets
-    'phosphate_level': 2.4, # Low phosphate level, also indicating rickets
-    'blood_creatinine_level': 0.9, # High blood creatinine level, indicating kidney disease
-    'weeks_pregnant': 14, # Patient is in the second trimester of pregnancy
-    'blood_urea_nitrogen_level': 14, # High blood urea nitrogen level, indicating kidney disease
-    'fatigue': True, # Patient has fatigue, which can be a symptom of multiple diseases
-    'gingivitis': True, # Patient has gingivitis, which can be a symptom of scurvy
-    'vitamin_c_level': 0.01, # Low vitamin C level, indicating scurvy
-    'ldlc_level': 3.5, # LDL cholesterol level is within normal range
-    'hdlc_level': 1.2, # HDL cholesterol level is within normal range
-    'family_history_heart_disease': True, # Family history of heart disease
-    'chest_pain': True, # Chest pain can be a symptom of heart disease
-    'floating_spots': True, # Floating spots can be a symptom of eye disease
 
-    # add fields for the diseases we want to check for
-    'obesity': False,
-    'gestational_diabetes': False,
-    'hypertension': False,   
-    'anaemia': False,
-    'rickets': False,
-    'kidney_diseases': False,
-    'scurvy': False,
-    'heart_disease': False,
-    'eye_disease': False
-}
+'''
+Without using model
+'''
+# using the diagnosis results and the food_dataset panda dataframe, return all the Meal_Id of the meals where the Disease column (space separated) contains any of the disease in diagnosis_results
+def diet_recommendation_rules(diagnosis_results):
+    recommended_diet = []
+    for disease, present in diagnosis_results.items():
+        if present:
+            recommended_diet += food_dataset[food_dataset['Disease'].str.contains(disease)]['Meal_Id'].tolist()
+
+    # remove duplicates
+    recommended_diet = list(set(recommended_diet))
+    return recommended_diet
+
+def get_diet(patient):
+    diagnosis_results = evaluate_all_rules(patient)
+    recommended_diet = diet_recommendation_rules(diagnosis_results)
+    return recommended_diet
+
+# patient_data = {
+#     'bmi': 31, # BMI of 31 which indicates obesity
+#     '1_hour_plasma_glucose_level': 190, # 1 hour plasma glucose level of 190, indicating gestational diabetes
+#     'gestational_diabetes_history': True, # Patient has a history of gestational diabetes
+#     'systolic_blood_pressure': 145, # High systolic blood pressure, indicating hypertension
+#     'diastolic_blood_pressure': 95, # High diastolic blood pressure, also indicating hypertension
+#     'urine_protein_level': 350, # High level of protein in urine, indicating pre-eclampsia or kidney disease
+#     'blurred_vision': True, # Symptom can be related to hypertension or eye disease
+#     'haemoglobin_level': 10.5, # Low haemoglobin level, indicating anaemia
+#     'calcium_level': 8.2, # Low calcium level, indicating rickets
+#     'phosphate_level': 2.4, # Low phosphate level, also indicating rickets
+#     'blood_creatinine_level': 0.9, # High blood creatinine level, indicating kidney disease
+#     'weeks_pregnant': 14, # Patient is in the second trimester of pregnancy
+#     'blood_urea_nitrogen_level': 14, # High blood urea nitrogen level, indicating kidney disease
+#     'fatigue': True, # Patient has fatigue, which can be a symptom of multiple diseases
+#     'gingivitis': True, # Patient has gingivitis, which can be a symptom of scurvy
+#     'vitamin_c_level': 0.01, # Low vitamin C level, indicating scurvy
+#     'ldlc_level': 3.5, # LDL cholesterol level is within normal range
+#     'hdlc_level': 1.2, # HDL cholesterol level is within normal range
+#     'family_history_heart_disease': True, # Family history of heart disease
+#     'chest_pain': True, # Chest pain can be a symptom of heart disease
+#     'floating_spots': True, # Floating spots can be a symptom of eye disease
+#     'obesity': False,
+#     'gestational_diabetes': False,
+#     'hypertension': False,   
+#     'anaemia': False,
+#     'rickets': False,
+#     'kidney_diseases': False,
+#     'scurvy': False,
+#     'heart_disease': False,
+#     'eye_disease': False
+# }
 
 # keywords = ['calcium', 'carbohydrates', 'chloride', 'fiber', 'iodine', 'iron', 'magnesium', 'manganese', 'phosphorus', 'potassium', 
     #             'protien', 'selenium', 'sodium', 'vitamin_a', 'vitamin_c', 'vitamin_d', 'vitamin_e', 'anemia', 'cancer', 'diabeties', 'eye_disease', 

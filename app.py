@@ -76,25 +76,28 @@ def diet():
     if data is not None and 'data' in data and isinstance(data['data'], dict):
         patient_data = data['data']
         patient = Patient(patient_data)
-        features = rules.get_features(patient)
 
-        for feature in features:
-            if feature in total_features:
-                d[feature] = 1
+        # features = rules.get_features(patient)
 
-        final_input = list(d.values())
+        # for feature in features:
+        #     if feature in total_features:
+        #         d[feature] = 1
 
-        print(final_input)
+        # final_input = list(d.values())
 
-        distances, indices = model.kneighbors([final_input])
+        # print(final_input)
 
-        results = []
+        # indices = model.kneighbors([final_input], return_distance=False)
 
-        for i in indices.flatten():
-            meal_id = food_dataset.loc[i]['Meal_Id']
-            results.append(meal_id)
+        # results = []
 
-        results = list(set(results))
+        # for i in indices.flatten():
+        #     meal_id = food_dataset.loc[i]['Meal_Id']
+        #     results.append(meal_id)
+
+        # results = list(set(results))
+
+        results = rules.get_meals(patient)
 
         response = jsonify(results)
     else:

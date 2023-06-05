@@ -56,7 +56,7 @@ def scurvy_rules():
 
 def heart_disease_rules():
     return [
-        Rule(0.8, lambda patient: patient.data['hyptertension']),
+        Rule(0.8, lambda patient: patient.data['hypertension']),
         Rule(0.8, lambda patient: patient.data['weeks_pregnant'] < 12 and (patient.data['ldlc_level'] > 3.27 or patient.data['hdlc_level'] < 1.23)),
         Rule(0.8, lambda patient: patient.data['weeks_pregnant'] > 12 and (patient.data['ldlc_level'] > 4.83 or patient.data['hdlc_level'] < 1.41)),
         Rule(0.8, lambda patient: patient.data['bmi'] > 30),

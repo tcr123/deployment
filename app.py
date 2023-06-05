@@ -101,6 +101,9 @@ def diet():
         # results = rules.get_meals(patient)
 
         diagnosis_results = rules.evaluate_all_rules(patient)
+
+        high_risk_diseases = [k for k, v in diagnosis_results.items() if v]
+
         recommended_diet = []
         for disease, present in diagnosis_results.items():
             if present:
@@ -111,7 +114,7 @@ def diet():
 
         response = jsonify({
             "meal_ids": results,
-            "diagnosis": diagnosis_results,
+            "diagnosis": high_risk_diseases,
         })
     else:
         response = jsonify('Invalid request')

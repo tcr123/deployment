@@ -109,7 +109,10 @@ def diet():
         # remove duplicates
         results = list(set(recommended_diet))
 
-        response = jsonify(results)
+        response = jsonify({
+            "meal_ids": results,
+            "diagnosis": diagnosis_results,
+        })
     else:
         response = jsonify('Invalid request')
     

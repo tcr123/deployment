@@ -77,27 +77,37 @@ def diet():
         patient_data = data['data']
         patient = Patient(patient_data)
 
-        features = rules.get_features(patient)
+        # features = rules.get_features(patient)
 
-        for feature in features:
-            if feature in total_features:
-                d[feature] = 1
+        # for feature in features:
+        #     if feature in total_features:
+        #         d[feature] = 1
 
-        final_input = list(d.values())
+        # final_input = list(d.values())
 
-        print(final_input)
+        # print(final_input)
 
-        indices = model.kneighbors([final_input], return_distance=False)
+        # indices = model.kneighbors([final_input], return_distance=False)
 
-        results = []
+        # results = []
 
-        for i in indices.flatten():
-            meal_id = food_dataset.loc[i]['Meal_Id']
-            results.append(meal_id)
+        # for i in indices.flatten():
+        #     meal_id = food_dataset.loc[i]['Meal_Id']
+        #     results.append(meal_id)
 
-        results = list(set(results))
+        # results = list(set(results))
 
+        ''''''
         # results = rules.get_meals(patient)
+
+        diagnosis_results = rules.evaluate_all_rules(patient)
+        recommended_diet = []
+        for disease, present in diagnosis_results.items():
+            if present:
+                recommended_diet += food_dataset[food_dataset['Disease'].str.contains(disease)]['Meal_Id'].tolist()
+
+        # remove duplicates
+        results = list(set(recommended_diet))
 
         response = jsonify(results)
     else:

@@ -1,10 +1,4 @@
 # Define the rules inside a rule-based expert system
-# The system will determine the confidence factor of each rule for each disease from the list [obesity, diabetes, hypertension, anaemia, rickets, kidney dieases, scurvy, heart disease, eye cancer]
-
-import pandas as pd
-
-food_dataset = pd.read_csv('dataset/data_eng.csv')
-
 class Rule:
     def __init__(self, expert_cf, apply_rule):
         self.expert_cf = expert_cf
@@ -159,7 +153,7 @@ def get_features(patient):
 
 '''
 Without using model
-'''
+
 # using the diagnosis results and the food_dataset panda dataframe, return all the Meal_Id of the meals where the Disease column (space separated) contains any of the disease in diagnosis_results
 def diet_recommendation_rules(diagnosis_results):
     recommended_diet = []
@@ -175,6 +169,8 @@ def get_diet(patient):
     diagnosis_results = evaluate_all_rules(patient)
     recommended_diet = diet_recommendation_rules(diagnosis_results)
     return recommended_diet
+
+'''
 
 # patient_data = {
 #     'bmi': 31, # BMI of 31 which indicates obesity

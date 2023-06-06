@@ -44,20 +44,20 @@ def kidney_diseases_rules():
         Rule(1.0, 0.8, lambda patient: patient.data['weeks_pregnant'] < 12 and patient.data['blood_urea_nitrogen_level'] > 12),
         Rule(1.0, 0.8, lambda patient: patient.data['weeks_pregnant'] > 12 and patient.data['weeks_pregnant'] < 24 and patient.data['blood_urea_nitrogen_level'] > 13),
         Rule(1.0, 0.8, lambda patient: patient.data['weeks_pregnant'] > 24 and patient.data['blood_urea_nitrogen_level'] > 11),
-        Rule(1.0, 0.8, lambda patient: patient.data['hypertension']),
-        Rule(1.0, 0.8, lambda patient: patient.data['fatigue']),
+        Rule(0.9, 0.8, lambda patient: patient.data['hypertension']),
+        Rule(0.9, 0.8, lambda patient: patient.data['fatigue']),
     ]
 
 def scurvy_rules():
     return [
-        Rule(1.0, 0.8, lambda patient: patient.data['fatigue']),
+        Rule(0.9, 0.8, lambda patient: patient.data['fatigue']),
         Rule(1.0, 0.8, lambda patient: patient.data['gingivitis']),
         Rule(1.0, 0.8, lambda patient: patient.data['vitamin_c_level'] < 0.02),
     ]
 
 def heart_disease_rules():
     return [
-        Rule(0.95, 0.75, lambda patient: patient.data['hypertension']),
+        Rule(0.90, 0.75, lambda patient: patient.data['hypertension']),
         Rule(1.0, 0.75, lambda patient: patient.data['weeks_pregnant'] < 12 and (patient.data['ldlc_level'] > 3.27 or patient.data['hdlc_level'] < 1.23)),
         Rule(1.0, 0.75, lambda patient: patient.data['weeks_pregnant'] > 12 and (patient.data['ldlc_level'] > 4.83 or patient.data['hdlc_level'] < 1.41)),
         Rule(1.0, 0.7, lambda patient: 25 <= patient.data['bmi'] >= 30),
